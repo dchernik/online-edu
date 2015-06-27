@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Canvas</title>
+  <style>
+    #canvas {
+        border: 1px solid black;
+        border-radius: 3px;
+    }
+  </style>
+  <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+</head>
+<body>
+  <h3></h3>
+  <canvas id="canvas" width="400" height="400">
+    Fallback content that will be displayed in case the web browser
+    does not support the canvas tag or in case scripting
+    is disabled.
+  </canvas>
+  <script>
+    $(function() {
+      var canvas, ctx;
+      function drawMonster(x, y) {     
+        // head
+        ctx.fillStyle='lightgreen';
+        ctx.fillRect(0,0,200,200);
+        
+        // eyes
+        ctx.fillStyle='red';
+        ctx.fillRect(35,30,20,20);
+        ctx.fillRect(140,30,20,20);
+        
+        // interior of eye
+        ctx.fillStyle='yellow';
+        ctx.fillRect(43,37,10,10);
+        ctx.fillRect(143,37,10,10);
+        
+        // Nose
+        ctx.fillStyle='black';
+        ctx.fillRect(90,70,20,80);
+        
+        // Mouth
+        ctx.fillStyle='purple';
+        ctx.fillRect(60,165,80,20);
+      }
+      $('h3').text('Look at my canvs!');
+      
+      canvas = document.querySelector('#canvas');
+      ctx = canvas.getContext('2d');
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#000';
+      ctx.strokeRect(50,25,50,50);
+      ctx.fillStyle = 'blue';
+      ctx.fillRect(75,50,50,50);
+      ctx.fillStyle = 'red';
+      ctx.fillRect(100,75,50,50);
+      ctx.fillStyle = 'black';
+      ctx.font = 'italic 14pt Calibri';
+      ctx.fillText('Tri-color', 65, 15, 50);
+      ctx.strokeText('Tri-color', 67, 13, 50);
+      var w = ctx.measureText("TexT").width;
+      ctx.font = "20pt Arial";
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'center';
+      ctx.fillText("Width of 'TexT' text: " + w + "pixels", 200, 150);
+      // ctx.rotate(Math.PI/2);
+      ctx.save();
+      ctx.translate(125, 125);
+      ctx.rotate(Math.PI/2);
+      ctx.scale(1.5,.5);
+      drawMonster(0, 0);
+      ctx.fillStyle = 'cyan';
+      ctx.fillRect(0,0,50,50);
+      ctx.restore();
+      ctx.fillStyle = 'purple';
+      ctx.fillRect(0,0,50,50);
+      ctx.save();
+      ctx.moveTo(210, 100);
+      ctx.lineTo(320, 100);
+      ctx.stroke();
+      ctx.restore();
+      
+      console.time("Time to draw image");
+      var imageObj = new Image();
+      // Callback function called by the imageObj.src = .... line
+      //located after this function
+      imageObj.onload = function() {
+        // Draw the image only when we have the guarantee 
+        // that it has been loaded
+        ctx.drawImage(imageObj, 200, 200, 100, 100);
+        ctx.drawImage(imageObj, 0, 0, 512, 100, 130, 310, 256, 50);
+      };
+      console.timeEnd("Time to draw image");
+      
+      // draws an image from <img> element with id="logo"
+      // also can draw current frame from a <video> element on the page
+      function draw() {
+        var imageObj = document.querySelector("#logo");
+        console.log("image is already loaded, we draw it!");
+        ctx.drawImage(imageObj, 0, 10, 100, 100);
+      }
+
+      // Calls the imageObj.onload function asynchronously
+      imageObj.src = "http://www.w3.org/html/logo/downloads/HTML5_Logo_512.png";
+      ctx.beginPath() // clear buffer
+      console.time("Time to draw 1000 rectangles");
+      for(var i=0; i < 1000; i++) {
+        var x = Math.random() * 20 + 200;
+        var y = Math.random() * 30 + 25;
+        var width = Math.random() * 20;
+        var height = Math.random() * 30;
+        ctx.rect(x, y, width, height); // store a rectangle in path/buffer
+      }
+      ctx.stroke(); // draws the whole buffer (the 1000 rectangles) at once
+      console.timeEnd("Time to draw 1000 rectangles");
+      ctx.beginPath()
+      ctx.strokeStyle = "red";
+      
+      // Path made of three points (defines two lines)
+      ctx.moveTo(220,80);
+      ctx.lineTo(320, 320);
+      ctx.lineTo(100,0);
+      // Close the path, try commenting this line
+      ctx.closePath();
+      // indicate stroke color + draw first part of the path
+      ctx.strokeStyle = "blue";
+      ctx.stroke();
+      
+      ctx.beginPath();
+      // we ommited the last parameter
+      ctx.arc(100, 75, 50, 0, Math.PI/2);
+      ctx.lineWidth = 10;
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.arc(90, 65, 50, 0, Math.PI/2, true);
+      ctx.lineWidth = 10;
+      ctx.stroke();
+
+
+      ctx.beginPath();
+      ctx.moveTo(250, 70);
+      ctx.lineTo(300, 90);
+      ctx.quadraticCurveTo(330, 200, 370, 80);
+      ctx.lineTo(400, 90);
+      ctx.lineWidth = 5;
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = "rgba(0, 0, 255, 0.2)";
+      ctx.stroke();
+      
+      var grdFrenchFlag = ctx.createLinearGradient(200, 380, 300, 400);
+      grdFrenchFlag.addColorStop(0, "blue");
+      grdFrenchFlag.addColorStop(0.5, "white");
+      grdFrenchFlag.addColorStop(1, "red");
+      ctx.fillStyle = grdFrenchFlag;
+      ctx.fillRect(200, 380, 100, 20);
+      
+      /* draw checkered board
+      for(i = 0; i < n; i+=2) {
+         for(j = 0; j < n; j++) {
+            ctx.fillRect(cellWidth*(i+j%2), cellHeight*j, cellWidth, cellHeight);
+         }
+      }
+      */
+      
+      var grd = ctx.createRadialGradient(150, 100, 30, 210, 100, 100);
+      grd.addColorStop(0, "red");
+      grd.addColorStop(0.17, "orange");
+      grd.addColorStop(0.33, "yellow");
+      grd.addColorStop(0.5, "green");
+      grd.addColorStop(0.666, "blue");
+      grd.addColorStop(1, "violet");
+      ctx.fillStyle = grd;
+      ctx.fillRect(150, 20, 30, 20);
+      
+      /*
+      imageObj.onload = function(){
+        // Pattern creation using the image object
+        // Instead of "repeat", try different values : repeat-x, repeat-y,
+        // or no-repeat, You may draw larger shapes in order to see
+        // different results
+        // It is a good practice to leave this as a global variable if it
+        // will be reused by other functions
+        var pattern1 = ctx.createPattern(imageObj, "repeat");
+        // Draw things. Here a textured rectangle
+        ctx.fillStyle = pattern1;
+        ctx.fillRect(10, 10, 200, 200);
+        // ... And a wireframe one
+        ctx.lineWidth=20;
+        ctx.strokeStyle=pattern1;
+        ctx.strokeRect(230, 20, 150, 100);
+      };
+      */
+      ctx.save();
+      ctx.shadowColor = "Grey";    // color
+      ctx.shadowBlur = 20;         // blur level
+      ctx.shadowOffsetX = 15;      // horizontal offset
+      ctx.shadowOffsetY = 15;      // vertical offset
+      // first green filled rectangle
+      ctx.fillStyle = "#22FFDD"; 
+      ctx.fillRect(320, 20, 200, 100);
+      // second stroked rectangle
+      ctx.strokeStyle = "purple"; 
+      ctx.lineWidth=10;
+      ctx.strokeRect(320, 150, 200, 100);
+      ctx.restore();
+      
+      ctx.beginPath();
+      ctx.lineWidth = 12;
+      ctx.lineCap = 'round';  // 'butt'(default), 'square'
+      ctx.lineJoin = 'bevel'; // 'miter'(default), 'round'; ctx.miterLimit = 1;
+      ctx.moveTo(370, 370);
+      ctx.lineTo(390, 370);
+      ctx.lineTo(380, 350);
+      ctx.stroke();
+    });
+
+  </script>
+</body>
+</html>
