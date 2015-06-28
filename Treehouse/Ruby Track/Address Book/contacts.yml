@@ -1,0 +1,34 @@
+---
+- !ruby/object:Contact
+  phone_numbers:
+  - !ruby/object:PhoneNumber
+    kind: Home
+    number: 123-456-7890
+  - !ruby/object:PhoneNumber
+    kind: Work
+    number: 456-789-0123
+  addresses:
+  - !ruby/object:Address
+    kind: Home
+    street_1: 123 Main St.
+    street_2: ''
+    city: Portland
+    state: OR
+    postal_code: '12345'
+  first_name: Jason
+  last_name: Seifer
+- !ruby/object:Contact
+  phone_numbers:
+  - !ruby/object:PhoneNumber
+    kind: Home
+    number: 222-222-2222
+  addresses:
+  - !ruby/object:Address
+    kind: Home
+    street_1: 222 Two Lane
+    street_2: ''
+    city: Portland
+    state: OR
+    postal_code: '12345'
+  first_name: Nick
+  last_name: Pettit
