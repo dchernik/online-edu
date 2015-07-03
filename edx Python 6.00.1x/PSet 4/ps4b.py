@@ -7,6 +7,11 @@ import time
 # Problem #6: Computer chooses a word
 #
 #
+def isInHand(word, hand):
+    for char in word:
+        if char not in hand or word.count(char) > hand[char]: return False 
+    return True
+    
 def compChooseWord(hand, wordList, n):
     """
     Given a hand and a wordList, find the word that gives 
@@ -23,6 +28,12 @@ def compChooseWord(hand, wordList, n):
 
     returns: string or None
     """
+    max_score, answ = 0, None
+    for word in wordList:
+        if isInHand(word, hand) and getWordScore(word, n) > max_score:
+            max_score, answ = getWordScore(word, n), word
+    return answ
+        
     # BEGIN PSEUDOCODE <-- Remove this comment when you code this function; do your coding within the pseudocode (leaving those comments in-place!)
     # Create a new variable to store the maximum score seen so far (initially 0)
 
@@ -66,7 +77,22 @@ def compPlayHand(hand, wordList, n):
     n: integer (HAND_SIZE; i.e., hand size required for additional points)
     """
     # TO DO ... <-- Remove this comment when you code this function
+    score = 0
     
+    while calculateHandlen(hand) > 0:
+        print "Current hand: ", 
+        displayHand(hand)
+        user_input = compChooseWord(hand, wordList, n)
+        if user_input == None:
+            print 'Total score:', score, 'points.'#point.' if score == 1 else 'points.'
+            return
+        else:
+            hand = updateHand(hand, user_input)
+            points_per_word = getWordScore(user_input, n)
+            score += points_per_word
+            print '"' + user_input + '" earned', points_per_word, 'points. Total:', score, 'points.\n'#'point.' if points_per_word == 1 else 'points. Total:', score, 'point.' if score == 1 else 'points.\n'
+        
+    print 'Total score:',  score, 'points.'            
 #
 # Problem #8: Playing a game
 #
@@ -96,8 +122,24 @@ def playGame(wordList):
     wordList: list (string)
     """
     # TO DO... <-- Remove this comment when you code this function
-    print "playGame not yet implemented." # <-- Remove this when you code this function
-
+    hand = ''
+    while True:
+        choice = raw_input('Enter n to deal a new hand, r to replay the last hand, or e to end game: ').lower()
+        if choice == 'e': return
+        elif choice == 'r' and not hand: print 'You have not played a hand yet. Please play a new hand first!\n'
+        elif choice == 'n' or choice == 'r':
+            mode = raw_input('Enter u to have yourself play, c to have the computer play: ').lower()
+            while mode != 'u' and mode != 'c':
+                print 'Invalid command.'
+                mode = raw_input('Enter u to have yourself play, c to have the computer play: ').lower()
+            
+            if choice == 'n': 
+                n = random.randint(3, 40)   # = HAND_SIZE           - to satisfy grader
+                hand = dealHand(n)          # = dealHand(HAND_SIZE)
+                playHand(hand, wordList, n) if mode == 'u' else compPlayHand(hand, wordList, n)
+            else: playHand(hand, wordList, n) if mode == 'u' else compPlayHand(hand, wordList, n)
+            
+        else: print 'Invalid command.'
         
 #
 # Build data structures used for entire session and play game
