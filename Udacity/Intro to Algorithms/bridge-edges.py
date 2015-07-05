@@ -9,7 +9,9 @@
 #         postnumber of a node reachable by one hop
 #         from any descendant
 # green - same as red, but largest value
-#
+# bridge edges: mustbe tree edges and
+#               black >= green
+#               red > blue - black
 # Find the bridge edges in a graph given the
 # algorithm in lecture.
 # Complete the intermediate steps
